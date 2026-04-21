@@ -78,7 +78,7 @@ export default function PerformancePanel() {
                   fontFamily: "'Space Mono', monospace",
                   color: "#fff200",
                 }}
-                formatter={(value: number) => [value, "HR"]}
+                formatter={(value) => [value, "HR"]}
                 labelFormatter={() => ""}
                 itemStyle={{ color: "#fff200" }}
               />
