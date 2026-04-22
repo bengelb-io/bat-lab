@@ -47,7 +47,7 @@ export default function ScoutingDashboard() {
           onPrev={prev}
           onNext={next}
         />
-        <DashboardFooter />
+        <DashboardFooter page={activeIndex + 1} total={batPresets.length} />
       </div>
     </>
   );

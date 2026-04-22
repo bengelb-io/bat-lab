@@ -1,4 +1,4 @@
-export default function DashboardFooter() {
+export default function DashboardFooter({ page, total }: { page: number; total: number }) {
   return (
     <footer
       className="mt-10 flex justify-between items-center text-[10px] tracking-[0.3em] pt-4"
@@ -10,7 +10,7 @@ export default function DashboardFooter() {
       }}
     >
       <span>TEST_SERIES · GAMECHANGER_BAT_LAB</span>
-      <span>PAGE 01 / 04</span>
+      <span>PAGE {page} / {total}</span>
     </footer>
   );
 }
