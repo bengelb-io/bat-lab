@@ -1,8 +1,31 @@
+import { useState, useEffect, useCallback } from "react";
 import ScoreHeader from "./components/ScoreHeader";
 import MainShowcase from "./components/MainShowcase";
 import DashboardFooter from "./components/DashboardFooter";
+import { batPresets } from "./data/batPresets";
 
 export default function ScoutingDashboard() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const preset = batPresets[activeIndex];
+
+  const prev = useCallback(
+    () => setActiveIndex((i) => (i - 1 + batPresets.length) % batPresets.length),
+    [],
+  );
+  const next = useCallback(
+    () => setActiveIndex((i) => (i + 1) % batPresets.length),
+    [],
+  );
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [prev, next]);
+
   return (
     <>
       <style>{`
@@ -16,8 +39,14 @@ export default function ScoutingDashboard() {
           fontFamily: "'Inter', system-ui, sans-serif",
         }}
       >
-        <ScoreHeader />
-        <MainShowcase />
+        <ScoreHeader preset={preset} />
+        <MainShowcase
+          preset={preset}
+          activeIndex={activeIndex}
+          total={batPresets.length}
+          onPrev={prev}
+          onNext={next}
+        />
         <DashboardFooter />
       </div>
     </>

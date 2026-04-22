@@ -6,10 +6,11 @@ import {
   PolarRadiusAxis,
   Radar,
 } from "recharts";
-import { playerAttributes } from "../data/playerAttributes";
+import type { BatPreset } from "../data/batPresets";
 import BalancedBanner from "./BalancedBanner";
 
-export default function PlayerScorePanel() {
+export default function PlayerScorePanel({ preset }: { preset: BatPreset }) {
+  const playerAttributes = preset.attributes;
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
 
@@ -113,7 +114,7 @@ export default function PlayerScorePanel() {
       >
         VERDICT_
       </div>
-      <BalancedBanner />
+      <BalancedBanner verdict={preset.verdict} />
     </div>
   );
 }

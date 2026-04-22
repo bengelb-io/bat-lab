@@ -1,8 +1,9 @@
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import type { BatPreset } from "../data/batPresets";
 
-export default function BaseballBat() {
+export default function BaseballBat({ preset }: { preset: BatPreset }) {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,41 +28,12 @@ export default function BaseballBat() {
     renderer.setSize(width, height);
     mount.appendChild(renderer.domElement);
 
-    // Lathe profile for the bat — points (radius, y) from knob bottom to barrel tip.
-    const profile: [number, number][] = [
-      [0.00, -1.85],
-      [0.08, -1.84],
-      [0.16, -1.82],
-      [0.21, -1.78],
-      [0.22, -1.74],
-      [0.20, -1.70],
-      [0.15, -1.66],
-      [0.12, -1.60],
-      [0.105, -1.50],
-      [0.10, -1.30],
-      [0.10, -0.90],
-      [0.10, -0.50],
-      [0.105, -0.20],
-      [0.115, 0.05],
-      [0.14, 0.30],
-      [0.18, 0.55],
-      [0.22, 0.80],
-      [0.26, 1.05],
-      [0.295, 1.25],
-      [0.315, 1.45],
-      [0.32, 1.60],
-      [0.318, 1.72],
-      [0.30, 1.80],
-      [0.22, 1.84],
-      [0.12, 1.855],
-      [0.00, 1.86],
-    ];
-    const points = profile.map(([r, y]) => new THREE.Vector2(r, y));
-
+    const points = preset.profile.map(([r, y]) => new THREE.Vector2(r, y));
     const geometry = new THREE.LatheGeometry(points, 96);
     geometry.computeVertexNormals();
 
-    // --- Procedural wood-grain texture ---
+    const { wood } = preset;
+
     const makeWoodTexture = () => {
       const c = document.createElement("canvas");
       c.width = 512;
@@ -69,9 +41,9 @@ export default function BaseballBat() {
       const ctx = c.getContext("2d")!;
 
       const baseGrad = ctx.createLinearGradient(0, 0, c.width, 0);
-      baseGrad.addColorStop(0, "#a8733f");
-      baseGrad.addColorStop(0.5, "#c4914f");
-      baseGrad.addColorStop(1, "#a8733f");
+      baseGrad.addColorStop(0, wood.edgeColor);
+      baseGrad.addColorStop(0.5, wood.baseColor);
+      baseGrad.addColorStop(1, wood.edgeColor);
       ctx.fillStyle = baseGrad;
       ctx.fillRect(0, 0, c.width, c.height);
 
@@ -79,7 +51,7 @@ export default function BaseballBat() {
         const x = Math.random() * c.width;
         const alpha = 0.04 + Math.random() * 0.12;
         const w = 0.5 + Math.random() * 2.5;
-        ctx.strokeStyle = `rgba(60, 35, 15, ${alpha})`;
+        ctx.strokeStyle = `rgba(${wood.grainColor}, ${alpha})`;
         ctx.lineWidth = w;
         ctx.beginPath();
         ctx.moveTo(x, 0);
@@ -95,8 +67,8 @@ export default function BaseballBat() {
         const y = Math.random() * c.height;
         const r = 3 + Math.random() * 6;
         const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-        g.addColorStop(0, "rgba(50, 25, 10, 0.5)");
-        g.addColorStop(1, "rgba(50, 25, 10, 0)");
+        g.addColorStop(0, `rgba(${wood.knotColor}, 0.5)`);
+        g.addColorStop(1, `rgba(${wood.knotColor}, 0)`);
         ctx.fillStyle = g;
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
@@ -104,8 +76,8 @@ export default function BaseballBat() {
       }
 
       const handleGrad = ctx.createLinearGradient(0, c.height, 0, c.height * 0.55);
-      handleGrad.addColorStop(0, "rgba(25, 15, 8, 0.55)");
-      handleGrad.addColorStop(1, "rgba(25, 15, 8, 0)");
+      handleGrad.addColorStop(0, `rgba(${wood.handleTint}, 0.55)`);
+      handleGrad.addColorStop(1, `rgba(${wood.handleTint}, 0)`);
       ctx.fillStyle = handleGrad;
       ctx.fillRect(0, c.height * 0.55, c.width, c.height * 0.45);
 
@@ -141,9 +113,9 @@ export default function BaseballBat() {
     const material = new THREE.MeshStandardMaterial({
       map: woodTexture,
       roughnessMap: roughMap,
-      roughness: 1.0,
-      metalness: 0.0,
-      envMapIntensity: 0.6,
+      roughness: preset.material.roughness,
+      metalness: preset.material.metalness,
+      envMapIntensity: preset.material.envMapIntensity,
     });
 
     const bat = new THREE.Mesh(geometry, material);
@@ -152,6 +124,7 @@ export default function BaseballBat() {
     const batGroup = new THREE.Group();
     batGroup.add(bat);
     batGroup.position.y = -0.15;
+    batGroup.scale.setScalar(preset.scale ?? 1.0);
     scene.add(batGroup);
 
     const ambient = new THREE.AmbientLight(0x404050, 0.4);
@@ -210,7 +183,7 @@ export default function BaseballBat() {
         mount.removeChild(renderer.domElement);
       }
     };
-  }, []);
+  }, [preset.id]);
 
   return <div ref={mountRef} className="w-full h-full" />;
 }

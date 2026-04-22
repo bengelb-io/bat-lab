@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import type { BatPreset } from "../data/batPresets";
 
-export default function ScoreHeader() {
+export default function ScoreHeader({ preset }: { preset: BatPreset }) {
   const [now, setNow] = useState("");
   useEffect(() => {
     const d = new Date();
@@ -32,7 +33,7 @@ export default function ScoreHeader() {
           className="text-[10px] tracking-[0.2em] mt-1"
           style={{ color: "#ffffff", opacity: 0.6 }}
         >
-          GAMECHANGER
+          {preset.ratingLabel}
         </div>
         <div
           className="leading-none mt-1"
@@ -43,7 +44,7 @@ export default function ScoreHeader() {
             fontSize: "3.5rem",
           }}
         >
-          4.31
+          {preset.overallScore}
         </div>
         <div
           className="text-sm tracking-[0.2em]"
@@ -53,7 +54,7 @@ export default function ScoreHeader() {
             fontWeight: 600,
           }}
         >
-          <span style={{ opacity: 0.8 }}>GC</span> GOLD
+          {preset.ratingTier}
         </div>
       </div>
 
@@ -68,7 +69,7 @@ export default function ScoreHeader() {
             color: "#ffffff",
           }}
         >
-          LOUISVILLE SLUGGER
+          {preset.brand}
         </div>
         <div
           className="leading-none mt-1"
@@ -80,7 +81,7 @@ export default function ScoreHeader() {
             fontSize: "clamp(3.5rem, 8vw, 6rem)",
           }}
         >
-          SUPRA
+          {preset.model}
         </div>
         <div
           className="mx-auto mt-3"
@@ -100,7 +101,7 @@ export default function ScoreHeader() {
             opacity: 0.7,
           }}
         >
-          TWO-PIECE COMPOSITE
+          {preset.type}
         </div>
       </div>
 
@@ -116,7 +117,7 @@ export default function ScoreHeader() {
           className="mt-1 text-sm"
           style={{ color: "#ffffff", fontFamily: "'Space Mono', monospace" }}
         >
-          #0427 · {now}
+          {preset.testNumber} · {now}
         </div>
       </div>
     </header>

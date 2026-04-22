@@ -1,4 +1,4 @@
-export default function BalancedBanner() {
+export default function BalancedBanner({ verdict }: { verdict: string }) {
   return (
     <div className="mt-4 flex justify-center">
       <div
@@ -17,7 +17,7 @@ export default function BalancedBanner() {
             fontWeight: 800,
           }}
         >
-          BALANCED
+          {verdict}
         </span>
       </div>
     </div>

@@ -8,9 +8,10 @@ import {
   Cell,
 } from "recharts";
 import Stat from "./ui/Stat";
-import { seasonHomeRuns } from "../data/seasonHomeRuns";
+import type { BatPreset } from "../data/batPresets";
 
-export default function PerformancePanel() {
+export default function PerformancePanel({ preset }: { preset: BatPreset }) {
+  const { seasonHomeRuns } = preset;
   return (
     <div className="flex flex-col gap-6 h-full">
       <div>
@@ -25,10 +26,10 @@ export default function PerformancePanel() {
           PERFORMANCE
         </h2>
         <div className="flex flex-col gap-4">
-          <Stat label="EXIT VELOCITY AVG" value="114.2" unit="MPH" />
-          <Stat label="DISTANCE AVG" value="412" unit="'" />
-          <Stat label="HOME RUN LAUNCH ANGLE AVG" value="27.8" unit="°" />
-          <Stat label="BAT SPEED AVG" value="78.4" unit="MPH" />
+          <Stat label="EXIT VELOCITY AVG" value={preset.stats.exitVelocity} unit="MPH" />
+          <Stat label="DISTANCE AVG" value={preset.stats.distance} unit="'" />
+          <Stat label="HOME RUN LAUNCH ANGLE AVG" value={preset.stats.launchAngle} unit="°" />
+          <Stat label="BAT SPEED AVG" value={preset.stats.batSpeed} unit="MPH" />
         </div>
       </div>
 

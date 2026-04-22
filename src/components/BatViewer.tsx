@@ -1,4 +1,5 @@
 import BaseballBat from "./BaseballBat";
+import type { BatPreset } from "../data/batPresets";
 
 const gridBg = {
   backgroundColor: "#060e20",
@@ -13,7 +14,7 @@ const gridBg = {
   backgroundSize: "80px 80px, 80px 80px, 20px 20px, 20px 20px",
 } as const;
 
-export default function BatViewer() {
+export default function BatViewer({ preset }: { preset: BatPreset }) {
   return (
     <div className="relative w-full h-full" style={gridBg}>
       <div className="absolute top-4 right-4 z-20 text-right pointer-events-none">
@@ -28,7 +29,7 @@ export default function BatViewer() {
         </div>
       </div>
       <div className="w-full h-full">
-        <BaseballBat />
+        <BaseballBat preset={preset} />
       </div>
     </div>
   );
